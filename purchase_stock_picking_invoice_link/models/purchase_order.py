@@ -18,7 +18,9 @@ class PurchaseOrderLine(models.Model):
         ):
             if (
                 stock_move.state != "done"
-                or stock_move.scrapped
+                or getattr(
+                    stock_move, "scrapped", getattr(stock_move, "is_scrap", False)
+                )
                 or (
                     stock_move.location_id.usage != "supplier"
                     and (
@@ -36,9 +38,7 @@ class PurchaseOrderLine(models.Model):
                 )
                 moves_linked += stock_move
                 continue
-            elif float_is_zero(
-                to_invoice, precision_rounding=self.product_uom.rounding
-            ):
+            elif float_is_zero(to_invoice, precision_rounding=self.product_uom.rounding):
                 break
             to_invoice -= (
                 stock_move.quantity
