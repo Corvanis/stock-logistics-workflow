@@ -1,6 +1,6 @@
 # Copyright 2022 Tecnativa - Carlos Roca
 # License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
-from odoo import models
+from odoo import Command, models
 from odoo.tools import float_compare, float_is_zero
 
 
@@ -61,5 +61,5 @@ class PurchaseOrderLine(models.Model):
             < 0
         ):
             stock_moves = stock_moves.filtered("to_refund")
-        vals["move_line_ids"] = [(4, m.id) for m in stock_moves]
+        vals["move_line_ids"] = [Command.link(m.id) for m in stock_moves]
         return vals

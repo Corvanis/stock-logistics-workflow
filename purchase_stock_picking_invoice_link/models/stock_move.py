@@ -1,7 +1,7 @@
 # Copyright 2021 Tecnativa - Ernesto Tejeda
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo import models
+from odoo import Command, models
 
 
 class StockMove(models.Model):
@@ -27,7 +27,7 @@ class StockMove(models.Model):
                     ]
                 )
                 if inv_line:
-                    stock_move.invoice_line_ids = [(4, m.id) for m in inv_line]
+                    stock_move.invoice_line_ids = [Command.link(m.id) for m in inv_line]
         return res
 
     def get_moves_link_invoice(self):
